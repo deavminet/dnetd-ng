@@ -1,0 +1,46 @@
+{
+	"network": {
+		"listeners": {
+			"ipv4": {
+				"address": "127.0.0.1",
+				"port": 2222
+			},
+			"ipv6": {
+				"address": "::1",
+				"port": 2223
+			}
+		},
+		"info": {
+			"networkName" : "my custom network",
+			"motd" : "This is my server, hello",
+			"motdFile" : "./motd"
+		}
+	},
+	"accounting": {
+		"storageDir": "./accounting"
+	},
+	"links": {
+		"link1": {
+			"incoming": {
+			
+			},
+			"outgoing": {
+			
+			},
+			"auth": {
+			
+			}
+		},
+		"link2": {
+			"incoming": {
+			
+			},
+			"outgoing": {
+			
+			},
+			"auth": {
+			
+			}
+		}
+	}
+}
