@@ -1,0 +1,13 @@
+{
+	"authors": [
+		"Tristan B. Kildaire"
+	],
+	"copyright": "Copyright © 2021, Tristan B. Kildaire",
+	"dependencies": {
+		"dlog": "~>0.0.5",
+		"gogga": "~>0.1.3"
+	},
+	"description": "Official implementation of the DNET protocol for the server-side",
+	"license": "AGPLv3",
+	"name": "dnetd"
+}

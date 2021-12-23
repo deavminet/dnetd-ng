@@ -1,0 +1,15 @@
+.dub
+docs.json
+__dummy.html
+docs/
+/dnetd
+dnetd.so
+dnetd.dylib
+dnetd.dll
+dnetd.a
+dnetd.lib
+dnetd-test-*
+*.exe
+*.o
+*.obj
+*.lst
