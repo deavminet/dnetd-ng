@@ -6,3 +6,18 @@
 * relates to it, such as users, server links and processing/handling
 * of messages and commands.
 */
+module dnetd.server;
+
+import dnetd.app : logger;
+import dnetd.config : Configuration;
+
+/**
+* Represents an instance of a dnet server
+*/
+public final class Server
+{
+	this(Configuration config)
+	{
+		logger.log("Server instance '"~"PUT ID HERE"~"' starting up...");
+	}
+}
