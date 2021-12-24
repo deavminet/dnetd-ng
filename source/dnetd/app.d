@@ -32,5 +32,6 @@ void main()
 	}
 	catch(GeneralException e)
 	{
+		logger.log(e.toString());
 	}
 }

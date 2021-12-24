@@ -10,7 +10,24 @@ import std.exception;
 */
 public class GeneralException : Exception
 {
-	this()
+	/* Name of exception type and description */
+	private string errorTypeName;
+	private string message;
+
+	/**
+	* TODO: Make this take in a `string message`
+	*/
+	this(string message)
 	{
+		import std.string : split;
+		string[] fragments = split(this.classinfo.name, ".");
+		errorTypeName = fragments[fragments.length-1];
+		this.message = message;
+		super(null);
+	}
+
+	public override string toString()
+	{
+		return errorTypeName~": "~message;
 	}
 }

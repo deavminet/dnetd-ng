@@ -4,11 +4,17 @@
 module dnetd.config;
 
 import dnetd.app : logger;
-import std.json : JSONValue, JSONException;
+import std.json : JSONValue, JSONException, parseJSON;
 import dnetd.exceptions;
+import std.stdio : File;
 
 /**
+* In its instance-form this represents a read-in and parsed configuration
+* of the configuration file in an OOP format, with the ability to write back
+* any modifications made to it (TODO: Add this).
 *
+* In static use it provides the ability to translate between the JSON configuration
+* file and the instance (OOP) form.
 */
 public final class Configuration
 {
@@ -39,7 +45,8 @@ public final class Configuration
 		}
 		catch(JSONException e)
 		{
-			logger.log("Error whilst parsing the configuration: "~e.toString());
+			/* TODO: Throw proper error here saying which key is missing */
+			throw new ConfigurationError(e);
 		}
 		
 		return config;
@@ -54,7 +61,31 @@ public final class Configuration
 */
 public JSONValue readConfig(string path)
 {
+	File file;
+	file.open(path); /* TODO:Check this for errors */
+	/* TODO: Only open with read rights */
+
+	/* Allocate a buffer for the file */
+	byte[] contents;
+	contents.length = file.size(); /* TODO: Check size here */
+
+	/* TODO: Check this */
+	/* TODO: Technically the below is fine */
+	file.rawRead(contents);
+
 	JSONValue config;
+
+	try
+	{
+		config = parseJSON(cast(string)contents);
+	}
+	catch(JSONException e)
+	{
+		/* TODO: Get specific error here to show where config syntax is wrong */
+
+
+		throw new ConfigurationError(e);
+	}
 
 
 	return config;
@@ -66,7 +97,13 @@ public JSONValue readConfig(string path)
 */
 public final class ConfigurationError : GeneralException
 {
-	this()
+	this(string message)
 	{
+		super(message);
+	}
+
+	this(JSONException e)
+	{
+		super("JSON configuration has a syntax error ("~e.msg~")");
 	}
 }
