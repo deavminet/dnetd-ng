@@ -9,14 +9,14 @@
 module dnetd.server;
 
 import dnetd.app : logger;
-import dnetd.config : Configuration;
+import dnetd.config : ConfigurationError;
 
 /**
 * Represents an instance of a dnet server
 */
 public final class Server
 {
-	/* Server Conifguration */
+	/* Server Configuration */
 	private Configuration config;
 
 	this(Configuration config)
@@ -26,4 +26,16 @@ public final class Server
 	}
 
 	/* Rehash server configuration */
+	public void rehash()
+	{
+		try
+		{
+			config = Configuration.readConfig(config.configPath);
+		}
+		catch(ConfigurationError e)
+		{
+			/* TODO: Handle the error here by sending a server message */
+			logger.log("Error whilst rehashing the configuration");
+		}
+	}
 }

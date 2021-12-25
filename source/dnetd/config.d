@@ -216,6 +216,7 @@ struct NetworkInformation
 {
 	string serverName;
 	string motd;
+	ushort sid;
 
 	string networkName;
 
