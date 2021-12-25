@@ -33,7 +33,43 @@ public final class Configuration
 		return config;
 	}
 
+	/**
+	* Reads in the JSON from the given path to the configuration
+	* file
+	*
+	* On error throws TODO
+	*/
+	private static JSONValue readConfig(string path)
+	{
+		File file;
+		file.open(path); /* TODO:Check this for errors */
+		/* TODO: Only open with read rights */
 
+		/* Allocate a buffer for the file */
+		byte[] contents;
+		contents.length = file.size(); /* TODO: Check size here */
+
+		/* TODO: Check this */
+		/* TODO: Technically the below is fine */
+		file.rawRead(contents);
+
+		JSONValue config;
+
+		try
+		{
+			config = parseJSON(cast(string)contents);
+		}
+		catch(JSONException e)
+		{
+			/* TODO: Get specific error here to show where config syntax is wrong */
+
+
+			throw new ConfigurationError(e);
+		}
+
+
+		return config;
+	}
 
 	/**
 	* Load the configuration from a JSON source, returning the
@@ -185,40 +221,4 @@ struct NetworkInformation
 
 }
 
-/**
-	* Reads in the JSON from the given path to the configuration
-	* file
-	*
-	* On error throws TODO
-	*/
-	private JSONValue readConfig(string path)
-	{
-		File file;
-		file.open(path); /* TODO:Check this for errors */
-		/* TODO: Only open with read rights */
-
-		/* Allocate a buffer for the file */
-		byte[] contents;
-		contents.length = file.size(); /* TODO: Check size here */
-
-		/* TODO: Check this */
-		/* TODO: Technically the below is fine */
-		file.rawRead(contents);
-
-		JSONValue config;
-
-		try
-		{
-			config = parseJSON(cast(string)contents);
-		}
-		catch(JSONException e)
-		{
-			/* TODO: Get specific error here to show where config syntax is wrong */
-
-
-			throw new ConfigurationError(e);
-		}
-
-
-		return config;
-	}
+	
