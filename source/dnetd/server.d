@@ -16,8 +16,14 @@ import dnetd.config : Configuration;
 */
 public final class Server
 {
+	/* Server Conifguration */
+	private Configuration config;
+
 	this(Configuration config)
 	{
 		logger.log("Server instance '"~"PUT ID HERE"~"' starting up...");
+		this.config = config;
 	}
+
+	/* Rehash server configuration */
 }

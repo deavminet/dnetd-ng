@@ -7,6 +7,7 @@ import dnetd.app : logger;
 import std.json : JSONValue, JSONException, parseJSON;
 import dnetd.exceptions;
 import std.stdio : File;
+import std.string : cmp, strip;
 
 /**
 * In its instance-form this represents a read-in and parsed configuration
@@ -18,15 +19,31 @@ import std.stdio : File;
 */
 public final class Configuration
 {
+	string configPath;
+	NetworkInformation netInfo;
+
+	public static Configuration getConfig(string configPath)
+	{
+		JSONValue jsonConfig = readConfig("config.json");
+		Configuration config = Configuration.fromJSON(jsonConfig);
+
+		/* Save the path so we can rehash later on */
+		config.configPath = configPath;
+
+		return config;
+	}
+
+
+
 	/**
 	* Load the configuration from a JSON source, returning the
 	* configuration as a Configuration object, on error, null (TODO: Throw exception rather)
 	*
 	* @param jsonConfig the JSONValue configuration
 	*/
-	public static Configuration fromJSON(JSONValue jsonConfig)
+	private static Configuration fromJSON(JSONValue jsonConfig)
 	{
-		Configuration config;
+		Configuration config = new Configuration();
 		
 		try
 		{
@@ -35,6 +52,10 @@ public final class Configuration
 			/* Retrieve the `network` block */
 			JSONValue networkBlock = jsonConfig["network"];
 			
+			config.netInfo = confNetInfo(networkBlock["info"]);
+			// TODO: Log the above logger.log()
+
+
 			/* Retrieve the `accounting` block */
 			JSONValue accountingBlock = jsonConfig["accounting"];
 			
@@ -51,45 +72,83 @@ public final class Configuration
 		
 		return config;
 	}
+
+	private static NetworkInformation confNetInfo(JSONValue infoBlock)
+	{
+		NetworkInformation netInfo;
+
+		/**
+		* TODO (keycheck): Make sure that `serverName` is present
+		* and `networkName`
+		*
+		* `motd` is optional
+		*/
+		bool foundNetworkName;
+		bool foundServerName;
+
+		string[] keys = infoBlock.object.keys();
+		foreach(string key; keys)
+		{
+			if(cmp(key, "serverName") == 0)
+			{
+				foundServerName = true;
+				netInfo.serverName = infoBlock[key].str();
+			}
+			else if(cmp(key, "networkName") == 0)
+			{
+				foundNetworkName = true;
+				netInfo.networkName = infoBlock[key].str();
+			}
+
+		}
+
+
+		/**
+		* Make sure we found the required fields
+		*
+		* These are: serverName, networkName, sid (TODO: Finish these)
+		*/
+		if(!foundServerName)
+		{
+			throw new ConfigurationError("Missing server name");
+		}
+		else if(!foundNetworkName)
+		{
+			throw new ConfigurationError("Missing network name");
+		}
+
+		/**
+		* Strip whitespace from the beginnings and endings of
+		* `serverName`, `networkName`, (TODO: Complete list)
+		*/
+		netInfo.serverName = strip(netInfo.serverName);
+		netInfo.networkName = strip(netInfo.networkName);
+
+		/**
+		* Make sure the required fields were set to a valid
+		* value
+		*/
+		if(cmp(netInfo.networkName, "") == 0)
+		{
+			throw new ConfigurationError("Network name cannot be empty");
+		}
+		else if(cmp(netInfo.serverName, "") == 0)
+		{
+			throw new ConfigurationError("Server name cannot be empty");
+		}
+
+		/* TODO: Add handling for motd and motdFile */
+
+
+		return netInfo;
+	}
+
+	private this()
+	{
+	}
 }
 
-/**
-* Reads in the JSON from the given path to the configuration
-* file
-*
-* On error throws TODO
-*/
-public JSONValue readConfig(string path)
-{
-	File file;
-	file.open(path); /* TODO:Check this for errors */
-	/* TODO: Only open with read rights */
 
-	/* Allocate a buffer for the file */
-	byte[] contents;
-	contents.length = file.size(); /* TODO: Check size here */
-
-	/* TODO: Check this */
-	/* TODO: Technically the below is fine */
-	file.rawRead(contents);
-
-	JSONValue config;
-
-	try
-	{
-		config = parseJSON(cast(string)contents);
-	}
-	catch(JSONException e)
-	{
-		/* TODO: Get specific error here to show where config syntax is wrong */
-
-
-		throw new ConfigurationError(e);
-	}
-
-
-	return config;
-}
 
 
 /**
@@ -107,3 +166,59 @@ public final class ConfigurationError : GeneralException
 		super("JSON configuration has a syntax error ("~e.msg~")");
 	}
 }
+
+
+/**
+* Network information
+*
+* This holds information that pertains to network-wide
+* information (such as the network's name) and server-specific
+* information such as the message-of-the-day or the server's
+* name
+*/
+struct NetworkInformation
+{
+	string serverName;
+	string motd;
+
+	string networkName;
+
+}
+
+/**
+	* Reads in the JSON from the given path to the configuration
+	* file
+	*
+	* On error throws TODO
+	*/
+	private JSONValue readConfig(string path)
+	{
+		File file;
+		file.open(path); /* TODO:Check this for errors */
+		/* TODO: Only open with read rights */
+
+		/* Allocate a buffer for the file */
+		byte[] contents;
+		contents.length = file.size(); /* TODO: Check size here */
+
+		/* TODO: Check this */
+		/* TODO: Technically the below is fine */
+		file.rawRead(contents);
+
+		JSONValue config;
+
+		try
+		{
+			config = parseJSON(cast(string)contents);
+		}
+		catch(JSONException e)
+		{
+			/* TODO: Get specific error here to show where config syntax is wrong */
+
+
+			throw new ConfigurationError(e);
+		}
+
+
+		return config;
+	}
