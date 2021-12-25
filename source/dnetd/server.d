@@ -9,7 +9,7 @@
 module dnetd.server;
 
 import dnetd.app : logger;
-import dnetd.config : ConfigurationError;
+import dnetd.config : ConfigurationError, Configuration;
 
 /**
 * Represents an instance of a dnet server
@@ -30,7 +30,7 @@ public final class Server
 	{
 		try
 		{
-			config = Configuration.readConfig(config.configPath);
+			config = Configuration.getConfig(config.configPath);
 		}
 		catch(ConfigurationError e)
 		{
