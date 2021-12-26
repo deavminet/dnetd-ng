@@ -12,9 +12,13 @@
 		},
 		"info": {
 			"serverName" : "MyServer",
-			"networkName" : "networkNameGoesHere",
+			"sid" : 0,
 			"motd" : "This is my server, hello",
-			"motdFile" : "./motd"
+			"motdFile" : "./motd",
+
+
+			"networkName" : "networkNameGoesHere",
+
 		}
 	},
 	"accounting": {
