@@ -1,5 +1,5 @@
 /**
-*
+* Connection handling sub-system
 */
 module dnetd.connection.connection;
 
@@ -25,28 +25,4 @@ public abstract class Connection : Thread
 	* This is to be implemented by sub-classes
 	*/
 	public abstract void handler();
-}
-
-
-import std.socket;
-/**
-* FIXME: When we do anything so far, I am assuming
-* a streaming socket so we shouldn't let the
-* SocketListener use any SocketType that isn't STREAM
-*/
-public final class SocketConnection : Connection
-{
-	private Socket clientSock;
-
-	this(Socket socket)
-	{
-		clientSock = socket;
-	}
-
-	public override void handler()
-	{
-		while(true)
-		{
-		}
-	}
 }
