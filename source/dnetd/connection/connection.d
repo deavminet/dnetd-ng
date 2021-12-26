@@ -4,6 +4,7 @@
 module dnetd.connection.connection;
 
 import core.thread : Thread;
+import dnetd.server : Server;
 
 /**
 * Represents a client's/server's connection to
@@ -14,9 +15,16 @@ import core.thread : Thread;
 */
 public abstract class Connection : Thread
 {
-	this()
+	/**
+	* The server instance this Connection
+	* is associated with
+	*/
+	private Server server;
+
+	this(Server server)
 	{
 		super(&handler);
+		this.server = server;
 	}
 
 	/**

@@ -4,6 +4,7 @@
 
 import dnetd.connection.connection : Connection;
 import std.socket;
+import dnetd.server : Server;
 
 /**
 * FIXME: When we do anything so far, I am assuming
@@ -12,11 +13,12 @@ import std.socket;
 */
 public final class SocketConnection : Connection
 {
-	private Socket clientSock;
+	private Socket socket;
 
-	this(Socket socket)
+	this(Server server, Socket socket)
 	{
-		clientSock = socket;
+		super(server);
+		this.socket = socket;
 	}
 
 	public override void handler()
