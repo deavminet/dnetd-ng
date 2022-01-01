@@ -13,6 +13,7 @@ import dnetd.config : ConfigurationError, Configuration;
 import std.container.slist : SList;
 import dnetd.listeners.listeners : Listener;
 import dnetd.connection.connection : Connection;
+import core.sync.mutex : Mutex;
 
 /**
 * Represents an instance of a dnet server
@@ -26,13 +27,15 @@ public final class Server
 	* Listeners
 	*/
 	private SList!(Listener) listeners;
+	private Mutex listenersMutex;
 
 	/**
 	* Connected clients and servers
 	*
 	* Inbound and outbound
 	*/
-	private SList!(Connection) connections;
+	private SList!(Connection) conns;
+	private Mutex connsMutex;
 
 
 
@@ -41,6 +44,13 @@ public final class Server
 	{
 		logger.log("Server instance '"~"PUT ID HERE"~"' starting up...");
 		this.config = config;
+
+		/**
+		* Initialize all locks for data
+		* structures
+		*/
+		connsMutex = new Mutex();
+		listeners = new Mutex();
 	}
 
 	/* Rehash server configuration */
