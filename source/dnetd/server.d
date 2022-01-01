@@ -10,6 +10,9 @@ module dnetd.server;
 
 import dnetd.app : logger;
 import dnetd.config : ConfigurationError, Configuration;
+import std.container.slist : SList;
+import dnetd.listeners.listeners : Listener;
+import dnetd.connection.connection : Connection;
 
 /**
 * Represents an instance of a dnet server
@@ -18,6 +21,21 @@ public final class Server
 {
 	/* Server Configuration */
 	private Configuration config;
+
+	/**
+	* Listeners
+	*/
+	private SList!(Listener) listeners;
+
+	/**
+	* Connected clients and servers
+	*
+	* Inbound and outbound
+	*/
+	private SList!(Connection) connections;
+
+
+
 
 	this(Configuration config)
 	{
