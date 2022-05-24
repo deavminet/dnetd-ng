@@ -4,9 +4,8 @@
 	],
 	"copyright": "Copyright © 2021, Tristan B. Kildaire",
 	"dependencies": {
-		"dlog": "~>0.0.5",
-		"gogga": "~>0.1.3",
-		"jcli": "~>0.24.0"
+		"dlog": "~>0.0.6",
+		"tasky": "~>1.2.0"
 	},
 	"description": "Official implementation of the DNET protocol for the server-side",
 	"license": "AGPLv3",
